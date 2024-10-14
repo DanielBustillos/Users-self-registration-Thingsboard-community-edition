@@ -10,6 +10,8 @@ This project enables user to create new accounts (self registration) via a publi
 
 By using an API Gateway, this project ensures that tenant JWT tokens are not passed explicitly through the public dashboard, enhancing security.
 
+![Create account dashboard](./assets/createAccountScreenShoot.png)
+
 ## Project Structure
 
 - **Public Dashboard**: Displays data and includes a form for user registration.
