@@ -1,38 +1,37 @@
 # ThingsBoard Public Dashboard with User Registration and Device Management
 
-## Overview
-
-This project enables user to create new accounts (self registration) via a public dashboard in Thingsboard Community edition. It also sets up an AWS API Gateway to securely receive user data from the form without exposing sensitive JWT tokens directly. The data is processed via an AWS Lambda function that performs the following actions:
+This project enables user self-registration via a customizable public dashboard in ThingsBoard Community Edition. It integrates AWS API Gateway and a Lambda function to securely and cost-effectively collect user data without exposing sensitive JWT tokens, while interacting with ThingsBoard's API methods. The AWS Lambda function processes the following tasks:
 
 - Creates a new customer and user in ThingsBoard.
-- Assigns the public dashboard to the newly created customer.
-- Creates a new device linked to the user for monitoring purposes.
+- Assigns a custom dashboard to the newly created customer and sets it as the home dashboard.
+- Creates a new device linked to the user.
 
-By using an API Gateway, this project ensures that tenant JWT tokens are not passed explicitly through the public dashboard, enhancing security.
+By leveraging AWS API Gateway and Lambda, this project offers a secure and affordable solution, ensuring tenant JWT tokens are not exposed on the public dashboard while keeping operational costs low.
 
 ![Create account dashboard](./assets/createAccountScreenShoot.png)
 
-**Security Consideration**: The API Gateway will handle communication between the public dashboard and the backend. This ensures that JWT tokens are not exposed in the browser.
+
+> **Note**: The current code includes some workarounds designed to function safely. For example, a new device is created for each new account. These shortcuts are practical for enabling the auto-registration process in the ThingsBoard Community Edition. However, if you need a more efficient and scalable solution, consider upgrading to the paid version of ThingsBoard, which offers advanced features and better scalability.
 
 
-## Project logic
+## Project Logic
 
-- **Public Dashboard**: Displays data and includes a form for user registration.
-- **API Gateway**: Receives user information submitted from the public dashboard form.
-- **Lambda Function**: Handles customer and user creation, dashboard assignment, and device creation in ThingsBoard.
+- **Public Dashboard**: Displays data and provides a form for user registration.
+- **API Gateway**: Receives user data submitted from the dashboard form.
+- **Lambda Function**: Manages user creation, dashboard assignment, and device creation in ThingsBoard.
 
 ![Flow diagram](./assets/flow%20diagram.png)
+
 ## Prerequisites
 
-Before setting up this project, ensure you have the following:
+Before setting up this project, ensure you have:
 
-- **ThingsBoard on premise**: A running instance of ThingsBoard.
+- **ThingsBoard on-premise**: A running instance of ThingsBoard.
 - **AWS Account**: To create the API Gateway and Lambda function.
-- **Email smtp configure** configure smtp credential from custom mail to be able to send mails. I use Zoho mail for this purpose.
-- **Sample device** create a sample device with a device profile. This device will be copied and assigned to new customer. This is necesary because Community edition does not let you to assign many customers to a single device.
+- **Email SMTP configuration**: Set up SMTP credentials for sending emails (e.g., Zoho Mail). This is used to send confirmation to customer email address.
+- **Sample Device**: Create a sample device with a device profile. This sample device will be copied and assigned to the new customer since ThingsBoard Community Edition does not allow multiple customers to share a device.
 
 ## Step-by-Step Process:
-
 
 ### 1. Create the Lambda Function
 
@@ -123,7 +122,7 @@ In this step, you'll securely pass user data from the ThingsBoard dashboard to t
    - In the CORS settings, make sure to include the URL of your ThingsBoard dashboard in the list of allowed origins.
    - Save your changes and deploy the API.
      
-### 5. **Test API and Lambda Integration**:
+5. **Test API and Lambda Integration**:
    - Run `testAPIGateway.py` after updating the placeholder parameters (e.g., API URL, API key, user details).
    - Upon execution, the script should trigger the Lambda function and successfully create new users in ThingsBoard.
 
@@ -137,7 +136,8 @@ In this step, you'll securely pass user data from the ThingsBoard dashboard to t
 - Configure the following in the widget:
   - `const apiUrl = "your API URL with endpoint";`
   - `"x-api-key": "your API token";`
-  - Optionally, update the logo in the `logo div`.
+  - Optionally, update the logo in the `logo div` and edit css colors and styling.
+  - 
 
 - For improved styling, modify the following in Dashboard settings:
   - Hide the toolbar.
@@ -146,4 +146,4 @@ In this step, you'll securely pass user data from the ThingsBoard dashboard to t
   - Disable "Apply margin to the sides of the layout."
   
 - Test to ensure the form works as expected.
-
+- Finally, you can share the public dashboard link to new users.
