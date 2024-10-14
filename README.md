@@ -146,4 +146,5 @@ In this step, you'll securely pass user data from the ThingsBoard dashboard to t
   - Disable "Apply margin to the sides of the layout."
   
 - Test to ensure the form works as expected.
-- Finally, you can share the public dashboard link to new users.
+
+Finally, you can share the public dashboard link to new users.
