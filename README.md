@@ -3,7 +3,7 @@
 This project enables user self-registration via a customizable public dashboard in ThingsBoard Community Edition. It integrates AWS API Gateway and a Lambda function to securely and cost-effectively collect user data without exposing sensitive JWT tokens, while interacting with ThingsBoard's API methods. The AWS Lambda function processes the following tasks:
 
 - Creates a new customer and user in ThingsBoard.
-- Assigns the public dashboard to the newly created customer.
+- Assigns a custom dashboard to the newly created customer and sets it as the home dashboard.
 - Creates a new device linked to the user.
 
 By leveraging AWS API Gateway and Lambda, this project offers a secure and affordable solution, ensuring tenant JWT tokens are not exposed on the public dashboard while keeping operational costs low.
@@ -30,7 +30,6 @@ Before setting up this project, ensure you have:
 - **AWS Account**: To create the API Gateway and Lambda function.
 - **Email SMTP configuration**: Set up SMTP credentials for sending emails (e.g., Zoho Mail). This is used to send confirmation to customer email address.
 - **Sample Device**: Create a sample device with a device profile. This sample device will be copied and assigned to the new customer since ThingsBoard Community Edition does not allow multiple customers to share a device.
-
 
 ## Step-by-Step Process:
 
