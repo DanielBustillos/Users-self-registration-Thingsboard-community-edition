@@ -1,16 +1,18 @@
 # ThingsBoard Public Dashboard with User Registration and Device Management
 
-This project allows users to self-register via a customizable public dashboard in ThingsBoard Community Edition. It uses AWS API Gateway to securely receive user data without exposing sensitive JWT tokens. The data is processed by an AWS Lambda function that:
+This project enables user self-registration via a customizable public dashboard in ThingsBoard Community Edition. It integrates AWS API Gateway and a Lambda function to securely and cost-effectively collect user data without exposing sensitive JWT tokens, while interacting with ThingsBoard's API methods. The AWS Lambda function processes the following tasks:
 
 - Creates a new customer and user in ThingsBoard.
-- Assigns the public dashboard to the new customer.
+- Assigns the public dashboard to the newly created customer.
 - Creates a new device linked to the user.
 
-By using an API Gateway, this project prevents direct exposure of tenant JWT tokens on the public dashboard, enhancing security.
+By leveraging AWS API Gateway and Lambda, this project offers a secure and affordable solution, ensuring tenant JWT tokens are not exposed on the public dashboard while keeping operational costs low.
 
 ![Create account dashboard](./assets/createAccountScreenShoot.png)
 
-**Security Consideration**: The API Gateway securely manages the communication between the public dashboard and the backend to avoid exposing JWT tokens.
+
+> **Note**: The current code includes some workarounds designed to function safely. For example, a new device is created for each new account. These shortcuts are practical for enabling the auto-registration process in the ThingsBoard Community Edition. However, if you need a more efficient and scalable solution, consider upgrading to the paid version of ThingsBoard, which offers advanced features and better scalability.
+
 
 ## Project Logic
 
@@ -146,9 +148,3 @@ In this step, you'll securely pass user data from the ThingsBoard dashboard to t
   
 - Test to ensure the form works as expected.
 - Finally, you can share the public dashboard link to new users.
-
-
-> **Note**: The current code includes some shortcuts for simplicity. For example, a new user is created for each device, and dashboards need to be manually edited to ensure the newly created device is selected by default, if necessary. These shortcuts are useful for quick setups but may not be the most efficient for large-scale deployments.
-
-If you require a more optimized solution, consider upgrading to the paid version of ThingsBoard, which offers more advanced features and better scalability.
-
