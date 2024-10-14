@@ -72,6 +72,10 @@ The Lambda function is responsible for handling user registration and device set
    - In the Lambda function settings, under **Environment Variables**, add the following variables:
      - `USERNAME`: Your ThingsBoard tenant username.
      - `PASSWORD`: Your ThingsBoard tenant password.
+ While storing sensitive information like usernames and passwords in Lambda environment variables is generally considered safe (as they are encrypted and contained within the Lambda function), you can enhance security by reducing the exposure of these credentials:
+
+   - **Improvement suggestion**: Instead of storing the username and password, consider manually generating a **JWT token** with an extended expiration time (e.g., several weeks or months). You can configure ThingsBoard to refresh this token periodically in the panel, thereby reducing the need to frequently regenerate the token.
+   
 
 4. **Test the Lambda function**:
    - In the Lambda console, open the **Test** tab and create a new test event using the following sample JSON payload:
@@ -84,10 +88,6 @@ The Lambda function is responsible for handling user registration and device set
      "lastName": "Doe",
      "phone": "1234567890"
    }
-
- 
-- Add your user name and password ans env variables
-- Fill 
  
 ### 2. Set Up API Gateway in AWS
 
