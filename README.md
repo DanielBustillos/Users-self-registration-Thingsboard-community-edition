@@ -46,8 +46,20 @@ The Lambda function is responsible for handling user registration and device set
 #### Steps to Create the Lambda Function:
 
 1. **Create a new Lambda function** in the AWS Lambda console.
-   - Go to the AWS Lambda console and create a new function.
-   - Copy and paste the code from the `lambda function` folder of this repository into the function editor.
+- Go to the **AWS Lambda console** and create a new function with the following settings:
+  - **Runtime**: Select **Python 3.11**.
+  - **Other settings**: You can leave the remaining parameters at their default values (e.g., basic execution role, memory, timeout).
+
+- **Copy and paste the code** from the `lambdafunction.py` folder of this repository into the Lambda function code editor.
+
+- The Python code uses the **`requests`** library to communicate with the ThingsBoard API. AWS Lambda does not include this library by default, so you'll need to add it via a **Lambda layer**. There are two options to accomplish this:
+
+  1. **Use a pre-built Lambda layer**:
+     - Upload the provided `Lambda-layer.zip` file (found in lambda folder) as a new Lambda layer.
+     - Attach the layer to your Lambda function. If necessary, you can link the layer to the function using its **Layer ARN**.
+
+  2. **Create your own Lambda layer** (optional):
+     - If you prefer, you can create a custom Lambda layer by packaging the `requests` library yourself. However, this process can be more complex and time-consuming. Using the provided `Lambda-layer.zip` is simpler and quicker.
 
 2. **Edit the following placeholder definitions in the Lambda function code**:
    - `tb_url`: The URL of your ThingsBoard instance (e.g., `https://thingsboard.com`).
