@@ -58,6 +58,12 @@ Before setting up this project, ensure you have the following:
 - In ThingsBoard, create a new public dashboard. This dashboard will allow users to interact with and register their details.
 - Upload html widget contained in dashboard folder.
 - Configure env variables marked as #toFill
+- For better styling, modify this in Dashboard settings:
+  - In dashboard settings:
+    - hide tool bar
+    - enable "Auto fill layout height"
+    - Configure background color as needed
+    - Disable Apply margin to the sides of the layout
 
 
 **Security Consideration**: The API Gateway will handle communication between the public dashboard and the backend. This ensures that JWT tokens are not exposed in the browser.
