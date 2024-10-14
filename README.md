@@ -41,12 +41,13 @@ Before setting up this project, ensure you have:
 The Lambda function is responsible for handling user registration and device setup when triggered by the API Gateway. It performs the following tasks:
 
 - Generates a JWT token using tenant credentials.
-- Creates a new customer using the information received from the form.
+- Creates a new customer with the data submitted through the registration form.
 - Assigns a public dashboard to the newly created customer.
-- Sets the public dashboard as the home dashboard for the customer.
-- Creates a new device linked to the customer.
-- Copies telemetry data from a sample device to the new device.
-- Updates server-side attributes for the new device.
+- Sets the assigned dashboard as the home dashboard for the customer.
+- Optionally, it can:
+  - Create a new device linked to the customer (this line can be commented out in the `lambda_handler` function).
+  - Copy telemetry data from a sample device to the newly created device (this line can be commented out if not needed).
+  - Update server-side attributes for the new device (this line can also be commented out if not required).
 
 #### Steps to Create the Lambda Function:
 
@@ -150,3 +151,12 @@ In this step, you'll securely pass user data from the ThingsBoard dashboard to t
 - Test to ensure the form works as expected.
 
 Finally, you can share the public dashboard link to new users.
+
+## Final Notes
+
+- **Confirmation Email Styling**: The confirmation email sent to newly registered users uses ThingsBoard's default styling, which cannot be customized via the UI. To modify the styling, you'll need to edit the ThingsBoard source code directly. Alternatively, you can choose to display the activation link on the public dashboard dashboard (requires editing of lambda function), or create a pipeline that sends the email to tenant address, allowing you to forward it to the customer with your own custom styling.
+
+- **WAF Setup**: For enhanced security, consider setting up an AWS Web Application Firewall (WAF) to restrict API access to specific IP addresses. This ensures that only trusted sources can make calls to your API Gateway, protecting against unauthorized access.
+
+- **Mobile-Responsive Widgets**: To improve user experience on mobile devices, you can create additional mobile-responsive widgets in ThingsBoard. This will ensure that your dashboard is accessible and user-friendly across different screen sizes.
+
