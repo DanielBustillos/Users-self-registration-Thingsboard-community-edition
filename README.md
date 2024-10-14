@@ -8,6 +8,9 @@ This project enables user self-registration via a customizable public dashboard 
 
 By leveraging AWS API Gateway and Lambda, this project offers a secure and affordable solution, ensuring tenant JWT tokens are not exposed on the public dashboard while keeping operational costs low.
 
+> **Note**: The `createUser` ThingsBoard endpoint requires a JWT token from the tenant. While it is technically possible to pass the JWT directly from the dashboard without using AWS Lambda and API Gateway, this approach is highly insecure. If the JWT token is exposed in the frontend, it can easily be stolen and misused. To mitigate this risk, the tenant JWT token is securely enclosed within the AWS Lambda function, ensuring it is never exposed to the public.
+
+
 ![Create account dashboard](./assets/createAccountScreenShoot.png)
 
 
@@ -76,7 +79,7 @@ The Lambda function is responsible for handling user registration and device set
    - In the Lambda function settings, under **Environment Variables**, add the following variables:
      - `USERNAME`: Your ThingsBoard tenant username.
      - `PASSWORD`: Your ThingsBoard tenant password.
- While storing sensitive information like usernames and passwords in Lambda environment variables is generally considered safe (as they are encrypted and contained within the Lambda function), you can enhance security by reducing the exposure of these credentials:
+ > **Note**: While storing sensitive information like usernames and passwords in Lambda environment variables is generally considered safe (as they are encrypted and contained within the Lambda function), you can enhance security by reducing the exposure of these credentials:
 
    - **Improvement suggestion**: Instead of storing the username and password, consider manually generating a **JWT token** with an extended expiration time (e.g., several weeks or months). You can configure ThingsBoard to refresh this token periodically in the panel, thereby reducing the need to frequently regenerate the token.
    
@@ -137,7 +140,6 @@ In this step, you'll securely pass user data from the ThingsBoard dashboard to t
   - `const apiUrl = "your API URL with endpoint";`
   - `"x-api-key": "your API token";`
   - Optionally, update the logo in the `logo div` and edit css colors and styling.
-  - 
 
 - For improved styling, modify the following in Dashboard settings:
   - Hide the toolbar.
