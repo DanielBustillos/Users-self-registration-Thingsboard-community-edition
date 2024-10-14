@@ -12,12 +12,13 @@ By using an API Gateway, this project ensures that tenant JWT tokens are not pas
 
 ![Create account dashboard](./assets/createAccountScreenShoot.png)
 
-## Project Structure
+## Project logic
 
 - **Public Dashboard**: Displays data and includes a form for user registration.
 - **API Gateway**: Receives user information submitted from the public dashboard form.
 - **Lambda Function**: Handles customer and user creation, dashboard assignment, and device creation in ThingsBoard.
 
+![Create account dashboard](./assets/flow diagram.png)
 ## Prerequisites
 
 Before setting up this project, ensure you have the following:
