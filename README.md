@@ -8,12 +8,12 @@ It integrates AWS API Gateway and a Lambda function to securely and cost-effecti
 - Assigns a custom dashboard to the newly created customer and sets it as the home dashboard.
 - Creates a new device linked to the user.
 
-By leveraging AWS API Gateway and Lambda, this project offers a secure and affordable solution, ensuring tenant JWT tokens are not exposed on the public dashboard while keeping operational costs low.
-
-![Create account dashboard](./assets/createAccountScreenShoot.png)
-
 
 > **Note**: The `createUser` ThingsBoard endpoint requires a JWT token from the tenant. While it is technically possible to pass the JWT directly from the dashboard without using AWS Lambda and API Gateway, this approach is highly insecure. If the JWT token is exposed in the frontend, it can easily be stolen and misused. To mitigate this risk, the tenant JWT token is securely enclosed within the AWS Lambda function, ensuring it is never exposed to the public.
+
+
+
+![Create account dashboard](./assets/createAccountScreenShoot.png)
 
 
 > **Note**: The current code includes some workarounds designed to function safely. For example, a new device is created for each new account. These shortcuts are practical for enabling the auto-registration process in the ThingsBoard Community Edition. However, if you need a more efficient and scalable solution, consider upgrading to the paid version of ThingsBoard, which offers advanced features and better scalability.
