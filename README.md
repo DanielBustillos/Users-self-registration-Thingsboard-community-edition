@@ -122,7 +122,7 @@ In this step, you'll securely pass user data from the ThingsBoard dashboard to t
    - In the CORS settings, make sure to include the URL of your ThingsBoard dashboard in the list of allowed origins.
    - Save your changes and deploy the API.
      
-### 5. **Test API and Lambda Integration**:
+5. **Test API and Lambda Integration**:
    - Run `testAPIGateway.py` after updating the placeholder parameters (e.g., API URL, API key, user details).
    - Upon execution, the script should trigger the Lambda function and successfully create new users in ThingsBoard.
 
