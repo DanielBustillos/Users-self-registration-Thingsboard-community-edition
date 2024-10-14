@@ -33,15 +33,46 @@ Before setting up this project, ensure you have the following:
 
 ### 1. Create the Lambda Function
 
-**Objective**: Process user registration, create a new customer, assign a dashboard, and create a new device.
+The Lambda function is responsible for handling user registration and device setup when triggered by the API Gateway. It performs the following tasks:
 
-- In AWS Lambda, create a new function using the code provided in the `lambda function` folder of the repository.
-- The function performs the following tasks:
-  - Generates a JWT token using tenant credentials.
-  - Creates a new customer using the user information received from the form.
-  - Assigns a public dashboard to the customer.
-  - Creates a new device linked to the user.
-  - Updates device telemetry and server-side attributes.
+- Generates a JWT token using tenant credentials.
+- Creates a new customer using the information received from the form.
+- Assigns a public dashboard to the newly created customer.
+- Sets the public dashboard as the home dashboard for the customer.
+- Creates a new device linked to the customer.
+- Copies telemetry data from a sample device to the new device.
+- Updates server-side attributes for the new device.
+
+#### Steps to Create the Lambda Function:
+
+1. **Create a new Lambda function** in the AWS Lambda console.
+   - Go to the AWS Lambda console and create a new function.
+   - Copy and paste the code from the `lambda function` folder of this repository into the function editor.
+
+2. **Edit the following placeholder definitions in the Lambda function code**:
+   - `tb_url`: The URL of your ThingsBoard instance (e.g., `https://thingsboard.com`).
+   - `homeDashboardId`: The ID of the dashboard you want to assign as the home dashboard for new customers.
+   - `deviceCloneId`: The ID of a sample device from which telemetry data will be copied.
+   - `device_profile_id`: The ID of the device profile associated with the sample device.
+   - `keys`: A list of telemetry keys to copy from the sample device to the new device (e.g., `["battery", "temperature"]`).
+
+3. **Set environment variables** in the Lambda console:
+   - In the Lambda function settings, under **Environment Variables**, add the following variables:
+     - `USERNAME`: Your ThingsBoard tenant username.
+     - `PASSWORD`: Your ThingsBoard tenant password.
+
+4. **Test the Lambda function**:
+   - In the Lambda console, open the **Test** tab and create a new test event using the following sample JSON payload:
+   
+   ```json
+   {
+     "title": "New Customer",
+     "email": "your@email.com",
+     "firstName": "John",
+     "lastName": "Doe",
+     "phone": "1234567890"
+   }
+
  
 - Add your user name and password ans env variables
 - Fill 
