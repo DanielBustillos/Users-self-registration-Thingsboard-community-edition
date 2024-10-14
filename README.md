@@ -1,6 +1,8 @@
 # ThingsBoard Public Dashboard with User Registration and Device Management
 
-ThingsBoard Community Edition does not natively support user account creation through a public interface. This project implements a workaround using AWS services to provide this functionality by a customizable public dashboard. It integrates AWS API Gateway and a Lambda function to securely and cost-effectively collect user data without exposing sensitive JWT tokens, while interacting with ThingsBoard's API methods. The AWS Lambda function processes the following tasks:
+ThingsBoard Community Edition does not natively support user account creation through a public interface. This project implements a workaround using AWS services to provide this functionality by a customizable public dashboard. 
+
+It integrates AWS API Gateway and a Lambda function to securely and cost-effectively collect user data without exposing sensitive JWT tokens, while interacting with ThingsBoard's API methods. The AWS Lambda function processes the following tasks:
 
 - Creates a new customer and user in ThingsBoard.
 - Assigns a custom dashboard to the newly created customer and sets it as the home dashboard.
