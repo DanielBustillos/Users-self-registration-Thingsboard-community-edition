@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project enables user to create new accounts (self registration) via a public dashboard that includes a form for collecting user information. It also sets up an AWS API Gateway to securely receive user data from the form without exposing sensitive JWT tokens directly. The data is processed via an AWS Lambda function that performs the following actions:
+This project enables user to create new accounts (self registration) via a public dashboard in Thingsboard Community edition. It also sets up an AWS API Gateway to securely receive user data from the form without exposing sensitive JWT tokens directly. The data is processed via an AWS Lambda function that performs the following actions:
 
 - Creates a new customer and user in ThingsBoard.
 - Assigns the public dashboard to the newly created customer.
@@ -11,6 +11,9 @@ This project enables user to create new accounts (self registration) via a publi
 By using an API Gateway, this project ensures that tenant JWT tokens are not passed explicitly through the public dashboard, enhancing security.
 
 ![Create account dashboard](./assets/createAccountScreenShoot.png)
+
+**Security Consideration**: The API Gateway will handle communication between the public dashboard and the backend. This ensures that JWT tokens are not exposed in the browser.
+
 
 ## Project logic
 
@@ -67,6 +70,8 @@ The Lambda function is responsible for handling user registration and device set
    - `deviceCloneId`: The ID of a sample device from which telemetry data will be copied.
    - `device_profile_id`: The ID of the device profile associated with the sample device.
    - `keys`: A list of telemetry keys to copy from the sample device to the new device (e.g., `["battery", "temperature"]`).
+  
+   - **Improvement suggestion**: Define this variables as env variables.
 
 3. **Set environment variables** in the Lambda console:
    - In the Lambda function settings, under **Environment Variables**, add the following variables:
@@ -91,38 +96,54 @@ The Lambda function is responsible for handling user registration and device set
  
 ### 2. Set Up API Gateway in AWS
 
-**Objective**: Securely pass user data from the ThingsBoard dashboard to the backend without exposing sensitive information.
+In this step, you'll securely pass user data from the ThingsBoard dashboard to the backend without exposing sensitive information. If you're not an expert in AWS API Gateway, this is a general approach to follow. For more detailed instructions, refer to the [AWS guide](https://docs.aws.amazon.com/lambda/latest/dg/services-apigateway.html) or use tools like ChatGPT to help you configure it step-by-step.
 
-- In AWS, navigate to **API Gateway** and create a new REST API.
-- Create a **POST** method for the endpoint (e.g., `/register`).
-  - This endpoint will receive the user data from the dashboard's form.
-- Set up the POST method to trigger the AWS Lambda function that processes the user registration and device setup.
+#### Steps to Set Up API Gateway:
+
+1. **Create a New REST API**:
+   - In the AWS Management Console, navigate to **API Gateway** and select **Create API**.
+   - Choose **REST API** and give your API a name (e.g., "User Registration API").
+   - For the **Endpoint Type**, choose **Regional**.
+
+2. **Create a POST Method**:
+   - In the API Gateway dashboard, create a **POST** method under the resource path where you want to receive the user data (e.g., `/register`).
+   - Select **POST** from the list of available methods.
+   - For **Integration Type**, choose **Lambda Function**. Then, select the Lambda function you created in the previous step to handle user registration and device creation.
+
+3. **Set Up Usage Plan and API Key**:
+   To prevent abuse or malicious attempts to create unintended accounts, you can limit the number of API calls using a usage plan and API keys:
+   
+   - Create a **Usage Plan** in the API Gateway console, setting limits on the number of API calls (e.g., X requests per minute).
+   - Enable **API Key Required** on the **POST** method under the resource.
+   - Generate an **API Key**, which will be required for calling the API. This key should be configured and stored securely in the next steps.
+   - Link the generated API Key to the usage plan you created, so that only a limited number of requests can be made with that key.
+
+4. **Enable CORS**:
+   - In the **POST** method settings, enable **CORS (Cross-Origin Resource Sharing)** to allow the ThingsBoard dashboard to communicate with your API.
+   - In the CORS settings, make sure to include the URL of your ThingsBoard dashboard in the list of allowed origins.
+   - Save your changes and deploy the API.
+     
+### 5. **Test API and Lambda Integration**:
+   - Run `testAPIGateway.py` after updating the placeholder parameters (e.g., API URL, API key, user details).
+   - Upon execution, the script should trigger the Lambda function and successfully create new users in ThingsBoard.
 
 
 ### 3. Create a Public Dashboard in ThingsBoard
-**Objective**: Build a public-facing dashboard that includes a user registration form.
-- In ThingsBoard, create a new public dashboard. This dashboard will allow users to interact with and register their details.
-- Upload html widget contained in dashboard folder.
-- Configure env variables marked as #toFill
-- For better styling, modify this in Dashboard settings:
-  - In dashboard settings:
-    - hide tool bar
-    - enable "Auto fill layout height"
-    - Configure background color as needed
-    - Disable Apply margin to the sides of the layout
 
+**Objective**: Build a public-facing dashboard with a user registration form that sends data to API Gateway.
 
-**Security Consideration**: The API Gateway will handle communication between the public dashboard and the backend. This ensures that JWT tokens are not exposed in the browser.
+- Create a new dashboard in ThingsBoard and set it to public.
+- Upload the HTML widget from the `dashboard` folder.
+- Configure the following in the widget:
+  - `const apiUrl = "your API URL with endpoint";`
+  - `"x-api-key": "your API token";`
+  - Optionally, update the logo in the `logo div`.
 
----
+- For improved styling, modify the following in Dashboard settings:
+  - Hide the toolbar.
+  - Enable "Auto fill layout height."
+  - Adjust background color as needed.
+  - Disable "Apply margin to the sides of the layout."
+  
+- Test to ensure the form works as expected.
 
-
-**Environment Variables**: Set the necessary environment variables for the Lambda function:
-
-```bash
-TB_URL=https://<your-thingsboard-url>
-USERNAME=<your-tenant-username>
-PASSWORD=<your-tenant-password>
-DASHBOARD_ID=<your-dashboard-id>
-DEVICE_PROFILE_ID=<your-device-profile-id>
-HOME_DASHBOARD_ID=<your-home-dashboard-id>
