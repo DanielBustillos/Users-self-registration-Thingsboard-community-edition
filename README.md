@@ -97,52 +97,6 @@ The Lambda function is responsible for handling user registration and device set
      "phone": "1234567890"
    }
 
-- **Confirmation Email Styling**: The confirmation email sent to newly registered users uses ThingsBoard's default styling, which cannot be customized via the UI. To modify this, you'll need to edit the ThingsBoard source code. Alternatively, you can display the activation link directly on the public dashboard by editing the Lambda function. Follow these steps:
-
-1. Set `?sendActivationMail=false` in the `api_post` call for user creation:
-    ```python
-    api_post("/user", user_details, jwt_token, "?sendActivationMail=false")
-    ```
-
-2. Add a function to retrieve the activation link:
-    ```python
-    def get_activation_link(user_id, jwt_token):
-        url = f"{tb_url}/api/user/{user_id}/activationLink"
-        headers = {
-            "Content-Type": "application/json",
-            "X-Authorization": f"Bearer {jwt_token}"
-        }
-        
-        response = requests.get(url, headers=headers)
-        
-        if response.status_code == 200:
-            return response.text  # Activation link in plain text
-        else:
-            raise Exception(f"Failed to get activation link: {response.status_code}, {response.text}")
-    ```
-
-3. Call this function after user creation inside the `lambda_handler`:
-    ```python
-    activation_link = get_activation_link(userResponse['id']['id'], jwt_token)
-    ```
-
-4. Return the activation link in the response body:
-    ```python
-    if activation_link:
-        return {
-            'statusCode': 200,
-            'body': activation_link
-        }
-    else:
-        return {
-            'statusCode': 200,
-            'body': json.dumps(userResponse)
-        }
-    ```
-
-5. Modify the dashboard HTML to handle the new response containing the activation link and display it to the user, with the option to redirect automatically.
-
- 
 ### 2. Set Up API Gateway in AWS
 
 In this step, you'll securely pass user data from the ThingsBoard dashboard to the backend without exposing sensitive information. If you're not an expert in AWS API Gateway, this is a general approach to follow. For more detailed instructions, refer to the [AWS guide](https://docs.aws.amazon.com/lambda/latest/dg/services-apigateway.html) or use tools like ChatGPT to help you configure it step-by-step.
@@ -204,4 +158,50 @@ Finally, you can share the public dashboard link to new users.
 - **WAF Setup**: For enhanced security, consider setting up an AWS Web Application Firewall (WAF) to restrict API access to specific IP addresses. This ensures that only trusted sources can make calls to your API Gateway, protecting against unauthorized access.
 
 - **Mobile-Responsive Widgets**: To improve user experience on mobile devices, you can create additional mobile-responsive widgets in ThingsBoard. This will ensure that your dashboard is accessible and user-friendly across different screen sizes.
+
+- 
+- **Confirmation Email Styling**: The confirmation email sent to newly registered users uses ThingsBoard's default styling, which cannot be customized via the UI. To modify this, you'll need to edit the ThingsBoard source code. Alternatively, you can display the activation link directly on the public dashboard by editing the Lambda function. Follow these steps:
+
+1. Set `?sendActivationMail=false` in the `api_post` call for user creation:
+    ```python
+    api_post("/user", user_details, jwt_token, "?sendActivationMail=false")
+    ```
+
+2. Add a function to retrieve the activation link:
+    ```python
+    def get_activation_link(user_id, jwt_token):
+        url = f"{tb_url}/api/user/{user_id}/activationLink"
+        headers = {
+            "Content-Type": "application/json",
+            "X-Authorization": f"Bearer {jwt_token}"
+        }
+        
+        response = requests.get(url, headers=headers)
+        
+        if response.status_code == 200:
+            return response.text  # Activation link in plain text
+        else:
+            raise Exception(f"Failed to get activation link: {response.status_code}, {response.text}")
+    ```
+
+3. Call this function after user creation inside the `lambda_handler`:
+    ```python
+    activation_link = get_activation_link(userResponse['id']['id'], jwt_token)
+    ```
+
+4. Return the activation link in the response body:
+    ```python
+    if activation_link:
+        return {
+            'statusCode': 200,
+            'body': activation_link
+        }
+    else:
+        return {
+            'statusCode': 200,
+            'body': json.dumps(userResponse)
+        }
+    ```
+
+5. Modify the dashboard HTML to handle the new response containing the activation link and display it to the user, with the option to redirect automatically.
 
