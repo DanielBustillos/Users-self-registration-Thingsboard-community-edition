@@ -84,7 +84,19 @@ The Lambda function is responsible for handling user registration and device set
      - `PASSWORD`: Your ThingsBoard tenant password.
  > **Note**: While storing sensitive information like usernames and passwords in Lambda environment variables is generally considered safe (as they are encrypted and contained within the Lambda function), you can enhance security by reducing the exposure of these credentials:
 
+
+4. **Test the Lambda function**:
+   - In the Lambda console, open the **Test** tab and create a new test event using the following sample JSON payload:
    
+   ```json
+   {
+     "title": "New Customer",
+     "email": "your@email.com",
+     "firstName": "John",
+     "lastName": "Doe",
+     "phone": "1234567890"
+   }
+
 - **Confirmation Email Styling**: The confirmation email sent to newly registered users uses ThingsBoard's default styling, which cannot be customized via the UI. To modify this, you'll need to edit the ThingsBoard source code. Alternatively, you can display the activation link directly on the public dashboard by editing the Lambda function. Follow these steps:
 
 1. Set `?sendActivationMail=false` in the `api_post` call for user creation:
@@ -130,18 +142,6 @@ The Lambda function is responsible for handling user registration and device set
 
 5. Modify the dashboard HTML to handle the new response containing the activation link and display it to the user, with the option to redirect automatically.
 
-
-4. **Test the Lambda function**:
-   - In the Lambda console, open the **Test** tab and create a new test event using the following sample JSON payload:
-   
-   ```json
-   {
-     "title": "New Customer",
-     "email": "your@email.com",
-     "firstName": "John",
-     "lastName": "Doe",
-     "phone": "1234567890"
-   }
  
 ### 2. Set Up API Gateway in AWS
 
