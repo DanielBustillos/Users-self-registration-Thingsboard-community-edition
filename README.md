@@ -84,8 +84,52 @@ The Lambda function is responsible for handling user registration and device set
      - `PASSWORD`: Your ThingsBoard tenant password.
  > **Note**: While storing sensitive information like usernames and passwords in Lambda environment variables is generally considered safe (as they are encrypted and contained within the Lambda function), you can enhance security by reducing the exposure of these credentials:
 
-   - **Improvement suggestion**: Instead of storing the username and password, consider manually generating a **JWT token** with an extended expiration time (e.g., several weeks or months). You can configure ThingsBoard to refresh this token periodically in the panel, thereby reducing the need to frequently regenerate the token.
    
+- **Confirmation Email Styling**: The confirmation email sent to newly registered users uses ThingsBoard's default styling, which cannot be customized via the UI. To modify this, you'll need to edit the ThingsBoard source code. Alternatively, you can display the activation link directly on the public dashboard by editing the Lambda function. Follow these steps:
+
+1. Set `?sendActivationMail=false` in the `api_post` call for user creation:
+    ```python
+    api_post("/user", user_details, jwt_token, "?sendActivationMail=false")
+    ```
+
+2. Add a function to retrieve the activation link:
+    ```python
+    def get_activation_link(user_id, jwt_token):
+        url = f"{tb_url}/api/user/{user_id}/activationLink"
+        headers = {
+            "Content-Type": "application/json",
+            "X-Authorization": f"Bearer {jwt_token}"
+        }
+        
+        response = requests.get(url, headers=headers)
+        
+        if response.status_code == 200:
+            return response.text  # Activation link in plain text
+        else:
+            raise Exception(f"Failed to get activation link: {response.status_code}, {response.text}")
+    ```
+
+3. Call this function after user creation inside the `lambda_handler`:
+    ```python
+    activation_link = get_activation_link(userResponse['id']['id'], jwt_token)
+    ```
+
+4. Return the activation link in the response body:
+    ```python
+    if activation_link:
+        return {
+            'statusCode': 200,
+            'body': activation_link
+        }
+    else:
+        return {
+            'statusCode': 200,
+            'body': json.dumps(userResponse)
+        }
+    ```
+
+5. Modify the dashboard HTML to handle the new response containing the activation link and display it to the user, with the option to redirect automatically.
+
 
 4. **Test the Lambda function**:
    - In the Lambda console, open the **Test** tab and create a new test event using the following sample JSON payload:
@@ -156,7 +200,6 @@ Finally, you can share the public dashboard link to new users.
 
 ## Final Notes
 
-- **Confirmation Email Styling**: The confirmation email sent to newly registered users uses ThingsBoard's default styling, which cannot be customized via the UI. To modify the styling, you'll need to edit the ThingsBoard source code directly. Alternatively, you can choose to display the activation link on the public dashboard dashboard (requires editing of lambda function), or create a pipeline that sends the email to tenant address, allowing you to forward it to the customer with your own custom styling.
 
 - **WAF Setup**: For enhanced security, consider setting up an AWS Web Application Firewall (WAF) to restrict API access to specific IP addresses. This ensures that only trusted sources can make calls to your API Gateway, protecting against unauthorized access.
 
