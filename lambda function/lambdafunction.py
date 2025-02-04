@@ -5,7 +5,7 @@ import requests
 import os
 
 tb_url =  #The URL of your ThingsBoard instance (e.g., https://thingsboard.com).
-homeDashboardId =  #The ID of the dashboard you want to assign as the home dashboard for new customers.
+homeDashboardId =  #The ID of the dashboard you want to assign as the home dashboard for new customers. 
 deviceCloneId =  #The ID of a sample device from which telemetry data will be copied.
 device_profile_id = #The ID of the device profile associated with the sample device.
 keys =  #A list of telemetry keys to copy from the sample device to the new device (e.g., ["battery", "temperature"]).
@@ -70,7 +70,7 @@ def create_user_with_activation(user_details, jwt_token):
     return api_post("/user", user_details, jwt_token, "?sendActivationMail=true")
 
 def assign_dashboard_to_customer(customer_id, jwt_token):
-    url = f"{tb_url}/api/customer/{customer_id}/dashboard/{dashboard_id}"
+    url = f"{tb_url}/api/customer/{customer_id}/dashboard/{homeDashboardId}"
     headers = {
         "Content-Type": "application/json",
         "X-Authorization": f"Bearer {jwt_token}"
@@ -181,6 +181,8 @@ def lambda_handler(event, context):
         customerId = customerResponse["id"]["id"]
 
         createUser(event, jwt_token, customerId)
+
+        # This function can be called multiple times to grant the user access to different dashboards.
         assign_dashboard_to_customer(customerId, jwt_token)
 
         newDeviceId = createNewDevice(jwt_token, customerId)
