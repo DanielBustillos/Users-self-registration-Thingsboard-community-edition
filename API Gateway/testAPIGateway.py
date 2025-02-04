@@ -24,7 +24,7 @@ try:
     
     # Check the response status
     if response.status_code in [200, 201]:
-        print("Response Data:", response.json())
+        print(f"Successfully created new account. Status code: {response.status_code}")
     else:
         print(f"Request failed with status code {response.status_code}")
         print("Response:", response.text)
