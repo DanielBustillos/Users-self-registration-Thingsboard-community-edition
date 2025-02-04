@@ -113,6 +113,15 @@ In this step, you'll securely pass user data from the ThingsBoard dashboard to t
    - Select **POST** from the list of available methods.
    - For **Integration Type**, choose **Lambda Function**. Then, select the Lambda function you created in the previous step to handle user registration and device creation.
 
+2. **Deploy the API**:
+- Click Actions → Deploy API.
+- Create a new Deployment Stage (e.g., prod or dev).
+- Click Deploy.
+- Copy the Invoke URL from the stage details—this is the endpoint your clients will use. It whould be something like this:
+  ```
+  https://[XXXXXXXXX].execute-api.[ZONE].amazonaws.com/[Stage name]/[Name Method]
+  ```
+
 3. **Set Up Usage Plan and API Key**:
    To prevent abuse or malicious attempts to create unintended accounts, you can limit the number of API calls using a usage plan and API keys:
    
